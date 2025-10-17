@@ -37,22 +37,32 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Переключение языка
-  const langBtn = document.getElementById('langBtn');
-  let currentLang = 'ru';
+const langBtn = document.getElementById('langBtn');
+let currentLang = 'ru';
+
+langBtn.addEventListener('click', () => {
+  currentLang = currentLang === 'ru' ? 'en' : 'ru';
+  langBtn.textContent = currentLang === 'ru' ? 'EN' : 'RU';
   
-  langBtn.addEventListener('click', () => {
-    currentLang = currentLang === 'ru' ? 'en' : 'ru';
-    langBtn.textContent = currentLang === 'ru' ? 'EN' : 'RU';
-    
-    // Обновляем все тексты с атрибутами data-ru и data-en
-    document.querySelectorAll('[data-ru], [data-en]').forEach(element => {
-      if (element.tagName === 'SPAN' || element.tagName === 'A') {
-        element.textContent = element.getAttribute(`data-${currentLang}`);
-      } else if (element.tagName === 'P') {
-        element.innerHTML = element.getAttribute(`data-${currentLang}`);
+  // Обновляем язык документа
+  document.documentElement.lang = currentLang;
+  
+  // Обновляем все тексты с атрибутами data-ru и data-en
+  document.querySelectorAll('[data-ru], [data-en]').forEach(element => {
+    const translation = element.getAttribute(`data-${currentLang}`);
+    if (translation) {
+      if (element.tagName === 'SPAN' || element.tagName === 'A' || 
+          element.tagName === 'H1' || element.tagName === 'H2' || 
+          element.tagName === 'H3' || element.tagName === 'H4' ||
+          element.tagName === 'H5' || element.tagName === 'H6') {
+        element.textContent = translation;
+      } else if (element.tagName === 'P' || element.tagName === 'DIV' || 
+                 element.tagName === 'LI') {
+        element.innerHTML = translation;
       }
-    });
+    }
   });
+});
 
   // Плавное появление элементов при скролле
   const fadeElements = document.querySelectorAll('.fade-in');
